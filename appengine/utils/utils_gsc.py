@@ -124,13 +124,14 @@ def load_site_data(site):
     
     service = get_gsc_service()
     
+    rowsSent = 0
+    
     while True:
 
         data = execute_request(service, site, query)
         if data and 'rows' in data:
             rows = data['rows']
             numRows = len(rows)
-            rowsSent = 0
             
             try:
                 result = bigq.stream_row_to_bigquery(site, rows)
@@ -138,19 +139,17 @@ def load_site_data(site):
                 rowsSent += numRows
                 loaded = True
                 
-                if numRows == 5000:
-                    query['startRow'] = int(rowsSent + 1)
-                    continue
-                else:
-                    if numRows and numRows > 0:
-                        db.add_entry(site, get_offset_date(),rowsSent)
+                if numRows == 0:
+                    db.add_entry(site, get_offset_date(), rowsSent)
                     break
+                query['startRow'] = int(rowsSent)
                 
             except HttpError as e:
                 log.error("Stream to Bigquery Error. ", e.content)
                 break
         
         else:
+            db.add_entry(site, get_offset_date(), rowsSent)
             break
         
     return loaded
