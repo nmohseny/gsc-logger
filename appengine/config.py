@@ -23,6 +23,7 @@ TABLE_SCHEMA = [
                     {"type": "STRING", "name": "query"},
                     {"type": "STRING", "name": "page"},
                     {"type": "STRING", "name": "device"},
+					{"type": "STRING", "name": "country"},
                     {"type": "INTEGER", "name": "clicks"},
                     {"type": "INTEGER", "name": "impressions"}, 
                     {"type": "FLOAT", "name": "ctr"}, 
@@ -42,7 +43,7 @@ ALLOW_OPEN_CRON = True
 HIDE_HOMEPAGE = False
 
 # Set Timezone ('US/Eastern', 'US/Central', 'US/Pacific')
-GSC_TIMEZONE = 'US/Eastern'
+GSC_TIMEZONE = 'US/Pacific'
 
 # Base query for GSC.  startDate and endDate are replaced upon call.
 GSC_QUERY = {
@@ -52,14 +53,15 @@ GSC_QUERY = {
                   "query",
                   "date",
                   "page",
-                  "device"
+                  "device",
+				  "country"
                  ],
                  "dimensionFilterGroups": [
                   {
                    "filters": [
                     {
                      "dimension": "country",
-                     "expression": "usa"
+                     "expression": "*"
                     }
                    ]
                   }
